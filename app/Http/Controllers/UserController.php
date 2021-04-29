@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\User\UserRepository;
 use Maatwebsite\Excel\Facades\Excel;
 
+
 class UserController extends Controller
 {
 
@@ -25,8 +26,8 @@ class UserController extends Controller
     }
 
     public function postAdd(Request $request){
-    	$data = $request->all();
 
+    	$data = $request->all();
         $this->validate($request,
             [
                 'email' => 'required|email|unique:users,email',
@@ -47,18 +48,42 @@ class UserController extends Controller
         
             ]
         );
-        $data['avatar'] = rand(0,9999).'_'.$request->file('avatar')->getClientOriginalName();
-        $file=$request->file('avatar');
-        $destinationPath = public_path('uploads/');
-        $file->move( $destinationPath,$data['avatar']);
-
-        $this->userRepo->create(['name'=>$request->name,'email'=>$request->email,'password'=>$request->password,'avatar'=> $data['avatar']]);
+        $this->userRepo->addUser($data);
         return redirect()->route('admin.user-list');
     }
 
     public function export() 
     {
         return Excel::download(new UsersExport, 'users.xlsx');
+    }
+
+
+   	public function getEdit($id){
+   		$user = $this->userRepo->find($id);
+   		return view('admin.users.edit_user', compact('user'));
+   	}
+
+   	public function postEdit(Request $request, $id){
+        $data = $request->all();
+   		$this->validate($request,
+            [
+                'email' => 'required|email',
+                'name' => 'required',
+               	'avatar'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ],
+            [
+                'email.required' => 'Vui long nhap email',
+                'email.email' => 'Nhap khong dung dinh dang email',
+                'email.unique' => 'Email da co nguoi su dung',
+            ]
+        );
+   		$this->userRepo->editUser($data, $id);
+        return redirect()->route('admin.user-list');
+   	}
+
+   	public function getDelete($id){
+        $this->userRepo->delete($id);
+        return redirect()->route('admin.user-list');
     }
 
 }

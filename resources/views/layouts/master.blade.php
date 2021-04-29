@@ -46,9 +46,13 @@
           <li><a href="{{route('event')}}" title="Sản phẩm">Events</a></li>
           <li><a href="{{route('blog')}}" title="Tin tức">Blog</a></li>
           <li><a href="{{route('contact')}}" title="Liên hệ">Contact</a></li>
-          <li title="Tìm kiếm"><a id="icon-search" href="#"><i class="fas fa-search"></i></a></li>
+          @if(Auth::check())
+            <li title="Profile"><a id="icon-shopping-cart" href="{{ route('profile') }}" class="fas fa-file-alt"><i class="bi bi-box-arrow-right"></i></a></li>
+            <li title="Đăng xuất"><a id="icon-shopping-cart" href="{{ route('signout') }}" class="fas fa-sign-out-alt"><i class="bi bi-box-arrow-right"></i></a></li>
+          @else
           <li title="Đăng nhập"><a id="icon-shopping-cart" href="{{route('signin')}}" class="fas fa-sign-in-alt"><i class="bi bi-box-arrow-right"></i></a></li>
-
+          @endif
+          <li title="Tìm kiếm"><a id="icon-search" href="#"><i class="fas fa-search"></i></a></li>
           <!-- Cart -->
           <!-- <div class="cart-overlay">
             <div class="cart">
@@ -115,9 +119,10 @@
 
 
 </div>
+  @yield('content')  
 
   <!-- Main -->
-@yield('content')
+
 
 <!-- Footer -->
 <div id="footer">

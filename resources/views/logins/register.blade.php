@@ -2,27 +2,27 @@
 @section('content')
 <div class="container">
 	<section id="content">
-		<form action="">
+		<form action="{{ route('registers') }}" method="post" enctype="multipart/form-data">
+			{{csrf_field()}}
 			<h1>Register Form</h1>
 			<div>
-				<input type="text" placeholder="Username" required="" id="username" />
+				<input type="text" placeholder="Username" required="" name="name" />
 			</div>
 			<div>
-				<input type="text" placeholder="Email" required="" id="username" />
+				<input type="text" placeholder="Email" required="" name="email" />
 			</div>
 			<div>
-				<input type="password" placeholder="Password" required="" id="password" />
+				<input type="password" placeholder="Password" required="" name="password" />
 			</div>
 			<div>
-				<input type="password" placeholder="Re-assword" required="" id="password" />
+				<input type="password" placeholder="Re-assword" required=""  name="re-password" />
 			</div>
 			<div>
-				<input type="file" placeholder="image" required="" id="password" />
+				<h4 style="text-align: left;">Avatar: <input type="file" placeholder="avatar" required="" name="avatar" /></h4>
 			</div>
 			<div>
 				<input type="submit" value="Register" />
 				<a href="{{ route('signin') }}">Back to Login</a>
-				
 			</div>
 		</form><!-- form -->
 		

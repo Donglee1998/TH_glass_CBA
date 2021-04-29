@@ -2,11 +2,11 @@
 @section('content')
 <div class="container">
 	<section id="content">
-		<form action="">
+		<form action="{{ route('reset-password') }}" method="post">
+			{{csrf_field()}}
 			<h1>Reset password Form</h1>
-			
 			<div>
-				<input type="text" placeholder="Email" required="" id="" />
+				<input type="text" placeholder="Email" required="" id="" name="email" />
 			</div>
 			
 			<div>

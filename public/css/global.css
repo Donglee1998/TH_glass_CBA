@@ -8,7 +8,11 @@ body {
 	font-family: 'Roboto';
 }
 
-.carousel {
+ul{
+	list-style-type: none;
+}
+
+.carosel {
 	position: sticky;
 }
 
@@ -124,13 +128,7 @@ body {
 }
 
 /* Thông báo thêm vào giỏ hàng thành công */
-.alert {
-	display: none;
-	position: fixed;
-	z-index: 999;
-	top: 50%;
-	left: 39.5%;
-}
+
 
 /* Sản phẩm nổi bật */
 .hot-products {

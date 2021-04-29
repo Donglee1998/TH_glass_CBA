@@ -22,8 +22,8 @@
                 <td>{{$item->name}}</td>
                 <td>{{$item->email}}</td>
                 <td><img src="{{asset('/uploads/'.$item->avatar)}}" style="max-height: 80px"></td>
-                <td><button class="btn btn-success"><a style="text-decoration: none" href="">Edit</a></button>
-                    <button class="btn btn-danger"><a style="text-decoration: none" href="" class="delete">Delete</a></button>
+                <td><button class="btn btn-success"><a style="text-decoration: none" href="{{ route('admin.user-edit',['id'=>$item->id]) }}">Edit</a></button>
+                    <button class="btn btn-danger"><a style="text-decoration: none" href="{{ route('admin.user-delete',['id'=>$item->id]) }}" class="delete">Delete</a></button>
                 </td>
             </tr>
         @endforeach

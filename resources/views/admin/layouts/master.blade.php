@@ -71,7 +71,7 @@
 
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="{{ route('admin.banner-list') }}">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Banners</span></a>
 
@@ -79,7 +79,7 @@
 
 
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('admin.event-list') }}">
                 <i class="fas fa-tasks"></i>
                 <span>Event</span>
             </a>

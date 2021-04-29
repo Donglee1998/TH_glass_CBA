@@ -28,7 +28,6 @@ class RoleController extends Controller
     }
 
     public function postAddRole(Request $request){
-
         $this->validate($request,
             [
                 'role_name' => 'required|unique:roles',
