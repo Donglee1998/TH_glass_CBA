@@ -14,6 +14,7 @@
             <td>Name</td>
             <td>Email</td>
             <td>Avatar</td>
+            <td>Event register</td>
             <td>Actions</td>
         </tr>
         @foreach($user as $item)
@@ -22,6 +23,9 @@
                 <td>{{$item->name}}</td>
                 <td>{{$item->email}}</td>
                 <td><img src="{{asset('/uploads/'.$item->avatar)}}" style="max-height: 80px"></td>
+                <td> @foreach($item->events as $key=>$value)
+                    <h4>{{$value['name']}}</h4>
+                @endforeach</td>
                 <td><button class="btn btn-success"><a style="text-decoration: none" href="{{ route('admin.user-edit',['id'=>$item->id]) }}">Edit</a></button>
                     <button class="btn btn-danger"><a style="text-decoration: none" href="{{ route('admin.user-delete',['id'=>$item->id]) }}" class="delete">Delete</a></button>
                 </td>

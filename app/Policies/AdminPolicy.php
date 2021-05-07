@@ -28,9 +28,9 @@ class AdminPolicy
      * @param  \App\Models\Admin  $admin
      * @return mixed
      */
-    public function view(User $user, Admin $admin)
+    public function view(Admin $admin)
     {
-        //
+        return $admin->checkPermissionAccess('admin-list');
     }
 
     /**
@@ -39,9 +39,9 @@ class AdminPolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(Admin $admin)
     {
-        //
+        return $admin->checkPermissionAccess('admin-add');
     }
 
     /**
@@ -51,9 +51,21 @@ class AdminPolicy
      * @param  \App\Models\Admin  $admin
      * @return mixed
      */
-    public function update(User $user, Admin $admin)
+    public function update(Admin $admin, $id)
     {
-        //
+        $admin1 = $admin->roles;
+        $role = Admin::find($id)->roles;
+        foreach ($admin1 as $ad){
+            foreach ($role as $ro){
+                if($ro->role_name == 'admin'){
+                    if($admin->checkPermissionAccess('admin-edit') && $ad->role_name  === $ro->role_name){
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+        return $admin->checkPermissionAccess('admin-edit');
     }
 
     /**
@@ -63,9 +75,21 @@ class AdminPolicy
      * @param  \App\Models\Admin  $admin
      * @return mixed
      */
-    public function delete(User $user, Admin $admin)
+    public function delete(Admin $admin, $id)
     {
-        //
+        $admin1 = $admin->roles;
+        $role = Admin::find($id)->roles;
+        foreach ($admin1 as $ad){
+            foreach ($role as $ro){
+                if($ro->role_name == 'admin'){
+                    if($admin->checkPermissionAccess('admin-delete') && $ad->role_name  === $ro->role_name){
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+        return $admin->checkPermissionAccess('admin-delete');
     }
 
     /**

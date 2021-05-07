@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Role\RoleRepository;
 use App\Repositories\Permission\PermissionRepository;
 use Illuminate\Http\Request;
+use App\Http\Requests\RoleRequest;
 
 class RoleController extends Controller
 {
@@ -27,21 +28,7 @@ class RoleController extends Controller
         return view('admin.admins.add_role', compact('permission'));
     }
 
-    public function postAddRole(Request $request){
-        $this->validate($request,
-            [
-                'role_name' => 'required|unique:roles',
-                'display_name' => 'required',
-                'permission_id' => 'required'
-            ],
-            [
-                'role_name.required' => 'Vui lòng nhập role name',
-                'role_name.unique' => 'Role name đã được sử dụng',
-                'display_name.required' => 'Vui lòng nhập mô tả của role',
-                'permission_id'=>'Vui lòng chọn permissions'
-            ]
-        );
-
+    public function postAddRole(RoleRequest $request){
         $role = $this->roleRepo->create(['role_name'=>$request->role_name,'display_name'=>$request->display_name]);
         $role->permissions()->attach($request->permission_id);
         return redirect()->route('admin.role-list');
@@ -54,24 +41,15 @@ class RoleController extends Controller
         return view('admin.admins.edit_role',compact('permissionCheck','permissionParent','role'));
     }
 
-    public function postUpdateRole(Request $request, $id){
-        $this->validate($request,
-            [
-                'role_name' => 'required',
-                'display_name' => 'required',
-                'permission_id' => 'required'
-            ],
-            [
-                'role_name.required' => 'Vui lòng nhập role name',
-                'role_name.unique' => 'Role name đã được sử dụng',
-                'display_name.required' => 'Vui lòng nhập mô tả của role',
-                'permission_id'=>'Vui lòng chọn permissions'
-            ]
-        );
-
+    public function postUpdateRole(RoleRequest $request, $id){
         $this->roleRepo->find($id)->update(['role_name'=>$request->role_name,'display_name'=>$request->display_name]);
         $role = $this->roleRepo->find($id);
         $role->permissions()->sync($request->permission_id);
+        return redirect()->route('admin.role-list');
+    }
+
+    public function deleteRole($id){
+        $this->roleRepo->delete($id);
         return redirect()->route('admin.role-list');
     }
 

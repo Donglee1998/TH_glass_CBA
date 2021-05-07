@@ -1,8 +1,17 @@
 @extends('layouts.master')
 @section('content')
+@if ($errors->any())
+			    <div class="alert alert-danger">
+			        <ul>
+			            @foreach ($errors->all() as $error)
+			                <li>{{ $error }}</li>
+			            @endforeach
+			        </ul>
+			    </div>
+			@endif
 <div class="container">
 	<section id="content">
-		<form action="{{ route('registers') }}" method="post" enctype="multipart/form-data">
+		<form action="{{ route('confirm') }}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<h1>Register Form</h1>
 			<div>

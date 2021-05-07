@@ -31,11 +31,11 @@ use App\Http\Controllers\ResetPasswordController;
 
         Route::group(['prefix'=>'/'],function(){
 
-        	 Route::get('/',[PageController::class, 'getIndex'])->name('index');
+             Route::get('/',[PageController::class, 'getIndex'])->name('index');
 
-        	 Route::get('/blog',[PageController::class, 'getBlog'])->name('blog');
+             Route::get('/blog',[PageController::class, 'getBlog'])->name('blog');
 
-        	 Route::get('/contact',[PageController::class, 'getContact'])->name('contact');
+             Route::get('/contact',[PageController::class, 'getContact'])->name('contact');
 
 
                  // Xử lý phần profile
@@ -48,87 +48,107 @@ use App\Http\Controllers\ResetPasswordController;
 
                  Route::post('/changePass',[PageController::class, 'postChange'])->name('change-password');
 
-
+                 Route::post('/search',[PageController::class, 'postSearch'])->name('search');
 
                  // Xử lý ở phần login user
 
-        	 Route::group(['prefix'=>'/signin'],function(){
+             Route::group(['prefix'=>'/signin'],function(){
 
-        	 	Route::get('/',[LoginController::class, 'getLogIn'])->name('signin');
+                Route::get('/',[LoginController::class, 'getLogIn'])->name('signin');
 
-                        Route::post('/',[LoginController::class, 'postLogIn'])->name('signin');
+                Route::post('/',[LoginController::class, 'postLogIn'])->name('signin');
 
-        	 	Route::get('/register',[LoginController::class, 'getRegister'])->name('registers');
+                Route::get('/register',[LoginController::class, 'getRegister'])->name('registers');
 
-                        Route::post('/register',[LoginController::class, 'postRegister'])->name('registers');
+                Route::post('/register',[LoginController::class, 'postRegister'])->name('registers.post');
 
-        	 	Route::get('/password',[LoginController::class, 'getPassword'])->name('password');
+                Route::get('/password',[LoginController::class, 'getPassword'])->name('password');
 
-                        Route::get('/signout',[LoginController::class, 'getLogOut'])->name('signout');
+                Route::get('/signout',[LoginController::class, 'getLogOut'])->name('signout');
 
-                        Route::post('/reset-password', [ResetPasswordController::class, 'sendMail'])->name('reset-password');
+                Route::post('/reset-password', [ResetPasswordController::class, 'sendMail'])->name('reset-password');
 
-                        Route::put('/reset-password/{token}', [ResetPasswordController::class, 'reset']);
+                Route::put('/reset-password/{token}', [ResetPasswordController::class, 'reset']);
 
-        	 });
+                Route::post('/confirm_user',[LoginController::class, 'postConfirm'])->name('confirm');
+
+                Route::get('/redirect/{provider}',[LoginController::class, 'redirect'])->name('redirect');
+
+             });
+
+            Route::get('/callback/{provider}',[LoginController::class, 'callback'])->name('callback');
+
 
                  // Xử lý ở phần events
 
-        	 Route::group(['prefix'=>'/event'],function(){
+             Route::group(['prefix'=>'/event'],function(){
 
-        	 	Route::get('/',[PageController::class, 'getEvent'])->name('event');
+                Route::get('/',[PageController::class, 'getEvent'])->name('event');
 
-        	 	Route::get('/register/{id}',[PageController::class, 'getRegister'])->name('register_event');
+                Route::get('/register/{id}',[PageController::class, 'getRegister'])->name('register_event');
 
-                        Route::post('/register/{id}',[PageController::class, 'postRegister'])->name('register_event');
+                Route::post('/comfirm_register/{id}',[PageController::class, 'confirmRegisterEvent'])->name('comfirm_register_event');
 
-        	 });
+                Route::post('/register/{id}',[PageController::class, 'postRegister'])->name('register_event');
+
+             });
 
 
         });
-        
+
 
 
         // Xử lý ở màn hình admin
 
 
-	Route::group(['guard' => 'admin', 'prefix'=>'/admin'],function(){
+    Route::group(['guard' => 'admin', 'prefix'=>'/admin'],function(){
 
-        	Route::get('/adminlist',[AdminController::class, 'getIndex'])->name('admin_index')->middleware('can:adminlist');
+            // Xử lý Admin
 
-        	Route::get('/adminadd',[AdminController::class, 'getAddAdmin'])->name('admin_addadmin');
+            Route::get('/adminlist',[AdminController::class, 'getIndex'])->name('admin_index')->middleware('can:admin-list');
 
-        	Route::post('/adminadd',[AdminController::class, 'postAddAdmin'])->name('admin_addadmin');
+            Route::get('/adminadd',[AdminController::class, 'getAddAdmin'])->name('admin_addadmin')->middleware('can:admin-add');
 
-                Route::get('/updateAdmin/{id}',[AdminController::class, 'getUpdateAdmin'])->name('admin.update-admin');
+            Route::post('/confirmAdmin',[AdminController::class, 'postConfirm'])->name('admin_confirm')->middleware('can:admin-add');
 
-                Route::post('/updateAdmin/{id}',[AdminController::class, 'updateAdmin'])->name('admin.update-admin');
+            Route::post('/adminadd',[AdminController::class, 'postAddAdmin'])->name('admin_add_admin')->middleware('can:admin-add');
 
-                Route::get('/deleteAdmin/{id}',[AdminController::class, 'deleteAdmin'])->name('admin.delete-admin');
+            Route::get('/updateAdmin/{id}',[AdminController::class, 'getUpdateAdmin'])->name('admin.update-admin')->middleware('can:admin-edit,id');
 
-        	Route::get('/login',[LoginAdminController::class, 'getLogin'])->name('admin_login');
+            Route::post('/updateAdmin/{id}',[AdminController::class, 'updateAdmin'])->name('admin.update-admin')->middleware('can:admin-edit,id');;
 
-        	Route::post('/login',[LoginAdminController::class, 'postLogin'])->name('admin_login');
+            Route::get('/deleteAdmin/{id}',[AdminController::class, 'deleteAdmin'])->name('admin.delete-admin')->middleware('can:admin-delete,id');;
 
-                Route::get('/logout',[LoginAdminController::class, 'getLogout'])->name('admin_logout');
+
+            // Xử lý login
+
+            Route::get('/login',[LoginAdminController::class, 'getLogin'])->name('admin_login');
+
+            Route::post('/login',[LoginAdminController::class, 'postLogin'])->name('admin_login');
+
+            Route::get('/logout',[LoginAdminController::class, 'getLogout'])->name('admin_logout');
 
 
 
                 //Xử lý Event
 
-                Route::get('/eventlist',[EventController::class, 'getIndex'])->name('admin.event-list');
+                Route::get('/eventlist',[EventController::class, 'getIndex'])->name('admin.event-list')->middleware('can:role-list');
 
-                Route::get('/eventadd',[EventController::class, 'getAdd'])->name('admin.event-add');
+                Route::get('/eventadd',[EventController::class, 'getAdd'])->name('admin.event-add')->middleware('can:role-add');
 
-                Route::post('/eventadd',[EventController::class, 'postAdd'])->name('admin.event-add');
+                Route::post('/event_confirm',[EventController::class, 'postConfirm'])->name('admin.event-confirm')->middleware('can:role-add');
 
-                Route::post('/import', [EventController::class, 'import'])->name('admin.event-import');
+                Route::post('/cropper',[EventController::class, 'cropper'])->name('admin.cropper')->middleware('can:role-add');
 
-                Route::get('/eventedit/{id}',[EventController::class, 'getEdit'])->name('admin.event-edit');
+                Route::post('/eventadd',[EventController::class, 'postAdd'])->name('admin.event.add')->middleware('can:role-add');
 
-                Route::post('/eventedit/{id}',[EventController::class, 'postEdit'])->name('admin.event-edit');
+                Route::post('/import', [EventController::class, 'import'])->name('admin.event-import')->middleware('can:role-add');
 
-                Route::get('/eventdelete/{id}',[EventController::class, 'getDelete'])->name('admin.event-delete');
+                Route::get('/eventedit/{id}',[EventController::class, 'getEdit'])->name('admin.event-edit')->middleware('can:role-edit');
+
+                Route::post('/eventedit/{id}',[EventController::class, 'postEdit'])->name('admin.event-edit')->middleware('can:role-edit');
+
+                Route::get('/eventdelete/{id}',[EventController::class, 'getDelete'])->name('admin.event-delete')->middleware('can:role-delete');
 
 
                 //Xử lý banner
@@ -148,36 +168,47 @@ use App\Http\Controllers\ResetPasswordController;
 
 
                 // Xử lý User
-                Route::get('/userlist',[UserController::class, 'getIndex'])->name('admin.user-list');
+                Route::get('/userlist',[UserController::class, 'getIndex'])->name('admin.user-list')->middleware('can:user-list');
 
-                Route::get('/useradd',[UserController::class, 'getAdd'])->name('admin.user-add');
+                Route::get('/useradd',[UserController::class, 'getAdd'])->name('admin.user-add')->middleware('can:user-add');
 
-                Route::post('/useradd',[UserController::class, 'postAdd'])->name('admin.user-add');
+                Route::post('/useradd',[UserController::class, 'postAdd'])->name('admin.user-add')->middleware('can:user-add');
 
                 Route::get('/userexport',[UserController::class, 'export'])->name('admin.user-export');
 
-                Route::get('/useredit/{id}',[UserController::class, 'getEdit'])->name('admin.user-edit');
+                Route::get('/useredit/{id}',[UserController::class, 'getEdit'])->name('admin.user-edit')->middleware('can:user-edit');
 
-                Route::post('/useredit/{id}',[UserController::class, 'postEdit'])->name('admin.user-edit');
+                Route::post('/useredit/{id}',[UserController::class, 'postEdit'])->name('admin.user-edit')->middleware('can:user-edit');
 
-                Route::get('/userdelete/{id}',[UserController::class, 'getDelete'])->name('admin.user-delete');
+                Route::get('/userdelete/{id}',[UserController::class, 'getDelete'])->name('admin.user-delete')->middleware('can:user-delete');
 
 
                 // Xử lý Role
-                Route::get('/viewRole',[RoleController::class, 'getRole'])->name('admin.role-list');
+                Route::get('/viewRole',[RoleController::class, 'getRole'])->name('admin.role-list')->middleware('can:role-list');
 
-                Route::get('/addRole',[RoleController::class, 'addRole'])->name('admin.role-add');
+                Route::get('/addRole',[RoleController::class, 'addRole'])->name('admin.role-add')->middleware('can:role-add');
 
-                Route::post('/addRole',[RoleController::class, 'postAddRole'])->name('admin.role-add');
+                Route::post('/addRole',[RoleController::class, 'postAddRole'])->name('admin.role-add')->middleware('can:role-add');
 
-                Route::get('/updateRole/{id}',[RoleController::class, 'updateRole'])->name('admin.role-update');
+                Route::get('/updateRole/{id}',[RoleController::class, 'updateRole'])->name('admin.role-update')->middleware('can:role-edit');
 
-                Route::post('/updateRole/{id}',[RoleController::class, 'postUpdateRole'])->name('admin.role-update');
+                Route::post('/updateRole/{id}',[RoleController::class, 'postUpdateRole'])->name('admin.role-update')->middleware('can:role-edit');
 
-                Route::get('/deleteRole/{id}',[RoleController::class, 'deleteRole'])->name('admin.role-delete');
-
-
-	});
+                Route::get('/deleteRole/{id}',[RoleController::class, 'deleteRole'])->name('admin.role-delete')->middleware('can:role-delete');
 
 
+    });
 
+
+    Route::get('storage/{filename}', function ($filename)
+    {
+        $path = storage_path('app/public/images/' . $filename);
+        if (!File::exists($path)) {
+            abort(404);
+        }
+        $file = File::get($path);
+        $type = File::mimeType($path);
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+        return $response;
+    });

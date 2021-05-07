@@ -13,7 +13,11 @@
     <div class="row">
     <div class="col-md-12 col-12">
       <p class="page-heading">Events</p>
-
+      @if(Session::has('mess'))
+        <div class="alert alert-danger" style="width: 40%; margin: auto auto">
+            {{Session::get('mess')}}
+        </div>
+    @endif
       {{-- <div class="alert alert-success" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Thêm vào giỏ hàng thành công !</strong>
@@ -36,7 +40,33 @@
       <!-- pagination -->
       
       <!-- pagination -->
+<form action="{{route('event')}}" method="get">
+  
+    <table style="margin-left: 550px">
+        <tr>
+            <td><span>Sắp xếp theo: </span>
+                <select class="sort" name="sort">
+                    <option value="id,desc">Mới nhất</option>
+                    <option value="id,asc">Cũ nhất</option>
+                    <option value="the_remaining_amount,asc">Gần hết chỗ</option>
+                </select>
+            </td>
+            <td>
+                <span>Số Event: </span>
+                <select class="sort" name="paginate">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">50</option>
+                </select>
+            </td>
+            <td>
+                <button class="fa fa-filter" type="submit"></button>
+            </td>
+        </tr>
+    </table>
 
+
+</form>
     </div>
     @foreach($event as $item)
     <div class="col-4">
@@ -54,13 +84,16 @@
         <div class="overlay">
         </div>
     </div>
-    @endforeach  
-  </div>
+    @endforeach
+</div>
+
   <!-- row -->
 
 
 </div>
 <!-- container -->
-
+{{-- {{$event->links()}} --}}
+<div class="row-name" align="center">{{$event->links('vendor.pagination.custom')}}</div>
 </main>
+
 @endsection

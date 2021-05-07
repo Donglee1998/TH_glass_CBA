@@ -15,7 +15,7 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <form action="{{route('admin.update-role',['id'=>$role->id])}}" method="post" enctype="multipart/form-data" style="width: 100%;">
+                    <form action="{{route('admin.role-update',['id'=>$role->id])}}" method="post" enctype="multipart/form-data" style="width: 100%;">
                         <div class="col-md-12">
                             @csrf
                             <div class="form-group">

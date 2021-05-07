@@ -34,6 +34,8 @@ class Admin extends Authenticatable
         return $this->belongsToMany(Role::class, 'role_admins', 'admin_id', 'role_id');
     }
 
+    
+
     public function checkPermissionAccess($pemissionCheck)
     {
 

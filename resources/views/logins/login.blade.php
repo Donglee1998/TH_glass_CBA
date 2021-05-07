@@ -1,5 +1,10 @@
 @extends('layouts.master')
 @section('content')
+@if(Session::has('mess'))
+        <div class="alert alert-danger" style="width: 40%; margin: auto auto">
+            {{Session::get('mess')}}
+        </div>
+@endif
 <div class="container">
 	<section id="content">
 		<form action="{{ route('signin') }}" method="post">
@@ -26,7 +31,16 @@
 				<a href="{{route('registers')}}">Register</a>
 			</div>
 		</form><!-- form -->
-		
 	</section><!-- content -->
+	<div class="container" style="margin-left: 300px">
+		    <a class="btn btn-lg btn-social btn-facebook" href="{{ route('redirect','facebook') }}">
+		    <i class="fa fa-facebook fa-fw"></i> Sign in with Facebook
+		    </a>
+		</div>
+		<div class="container" style="margin-left: 300px;">
+		    <a class="btn btn-lg btn-social btn-facebook" style="background-color: red" href="{{ route('redirect','google') }}">
+		    <i class="fa fa-facebook fa-fw"></i> Sign in with Google++
+		    </a>
+		</div>
 </div><!-- container -->
 @endsection

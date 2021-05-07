@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\Banner\BannerRepository;
+use App\Http\Requests\BannerRequest;
 
 class BannerController extends Controller
 {
@@ -22,14 +23,7 @@ class BannerController extends Controller
     	return view('admin.banners.add');
     }
 
-    public function postAdd(Request $request){
-    	$this->validate($request,
-            [
-                'name' => 'required',
-               	'image'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-            ],
-            [
-            ]);
+    public function postAdd(BannerRequest $request){
     	$data = $request->all();
     	$data['image'] = rand(0,9999).'_'.$request->file('image')->getClientOriginalName();
         $file=$request->file('image');
@@ -44,15 +38,7 @@ class BannerController extends Controller
     	return view('admin.banners.edit',compact('banner'));
     }
 
-    public function postEdit(Request $request, $id){
-    	$this->validate($request,
-            [
-                'name' => 'required',
-               	'image'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-            ],
-            [
-            ]);
-
+    public function postEdit(BannerRequest $request, $id){
     	$data = $request->all();
     	if (isset($data['image'])) {
     		$data['image'] = rand(0,9999).'_'.$request->file('image')->getClientOriginalName();

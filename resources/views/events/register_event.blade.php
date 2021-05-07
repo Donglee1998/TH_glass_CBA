@@ -2,7 +2,7 @@
 @section('content')
 <main>
 <div align="center">
-	<form action="{{ route('register_event',['id'=>$event->id]) }}" method="post">
+	<form action="{{ route('comfirm_register_event',['id'=>$event->id]) }}" method="post">
 		{{csrf_field()}}
 		<h1 style="text-align: center;">{{$event->name}}</h1>
 		<h4 style="margin-left: 600px">Start date: {{date('d-m-Y', strtotime($event->start_day))}}</h4>

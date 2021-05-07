@@ -34,6 +34,12 @@ class AdminRepository extends BaseRepository
         return $admin;
     }
 
+    public function viewPermission($id){
+        $admin = $this->model->with('permissions')->find($id);
+        dd($admin);
+        return $admin;
+    }
+
 
 
 

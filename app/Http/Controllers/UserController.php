@@ -5,6 +5,7 @@ use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use App\Repositories\User\UserRepository;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\RegisterRequest;
 
 
 class UserController extends Controller
@@ -17,39 +18,22 @@ class UserController extends Controller
     }
 
     public function getIndex(){
-    	$user = $this->userRepo->getAll();
-        return view('admin.users.index', compact('user'));
+    	$user = $this->userRepo->getUser();
+      return view('admin.users.index', compact('user'));
     }
 
     public function getAdd(){
     	return view('admin.users.add_user');
     }
 
-    public function postAdd(Request $request){
-
-    	$data = $request->all();
-        $this->validate($request,
-            [
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:6|max:20',
-                'name' => 'required',
-                're-password' => 'required|same:password',
-               	'avatar'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-            ],
-            [
-                'email.required' => 'Vui long nhap email',
-                'email.email' => 'Nhap khong dung dinh dang email',
-                'email.unique' => 'Email da co nguoi su dung',
-                'password.required' => 'Vui long nhap mat khau',
-                're-password.same' => 'Mat khau khong giong nhau',
-                'password.min' =>"Mat khau it nhat 6 ky tu",
-                'password.max' => "Mat khau toi da 20 ky tu",
-                'avatar.required'=>'Bạn chưa chọn avatar',
-        
-            ]
-        );
-        $this->userRepo->addUser($data);
-        return redirect()->route('admin.user-list');
+    public function postAdd(RegisterRequest $request){
+      	$data = $request->all();
+        $file=$data['avatar'];
+        $data['avatar'] = rand(0,9999).'_'.$data['avatar']->getClientOriginalName();
+        $destinationPath = public_path('uploads/');
+        $file->move( $destinationPath,$data['avatar']);
+        $this->userRepo->create($data);
+      return redirect()->route('admin.user-list');
     }
 
     public function export() 
@@ -64,20 +48,16 @@ class UserController extends Controller
    	}
 
    	public function postEdit(Request $request, $id){
-        $data = $request->all();
-   		$this->validate($request,
-            [
-                'email' => 'required|email',
-                'name' => 'required',
-               	'avatar'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-            ],
-            [
-                'email.required' => 'Vui long nhap email',
-                'email.email' => 'Nhap khong dung dinh dang email',
-                'email.unique' => 'Email da co nguoi su dung',
-            ]
-        );
-   		$this->userRepo->editUser($data, $id);
+      $data = $request->all();
+      if(isset($data['avatar'])){
+        $file=$data['avatar'];
+        $data['avatar'] = rand(0,9999).'_'.$data['avatar']->getClientOriginalName();
+        $destinationPath = public_path('uploads/');
+        $file->move( $destinationPath,$data['avatar']);
+        $this->userRepo->find($id)->update($data);
+        return redirect()->route('admin.user-list');
+      }
+        $this->userRepo->find($id)->update($data);
         return redirect()->route('admin.user-list');
    	}
 

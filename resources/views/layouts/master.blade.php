@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="{{asset('css/menu.css')}}">
 
   <link rel="stylesheet" href="{{asset('css/login.css')}}">
+
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto:400,500&display=swap&subset=vietnamese" rel="stylesheet">
 </head>
@@ -52,7 +53,10 @@
           @else
           <li title="Đăng nhập"><a id="icon-shopping-cart" href="{{route('signin')}}" class="fas fa-sign-in-alt"><i class="bi bi-box-arrow-right"></i></a></li>
           @endif
-          <li title="Tìm kiếm"><a id="icon-search" href="#"><i class="fas fa-search"></i></a></li>
+          <form style="margin: auto" action="{{ route('search') }}" method="post">
+            @csrf
+          <li title="Tìm kiếm" ><input type="text" name="search" style="height: 30px"><button class="fas fa-search" type="submit"></button></li>
+          </form>
           <!-- Cart -->
           <!-- <div class="cart-overlay">
             <div class="cart">
@@ -100,16 +104,7 @@
 
 
 
-<!-- Hộp tìm kiếm -->
-<div class=" search-box" id="search-box" style="display: none;">
-  <span class="close-search-box"><i class="far fa-window-close fa-2x" title="Đóng tìm kiếm"></i></span>
-  <form class="container" role="form">
-    <div class="form-group">
-      <input type="input" class="form-control input-lg" id="search" placeholder="Nhập tên sản phẩm">
-    </div>
-  </form>
-  <div id="results"></div>
-</div>
+
 <!-- Hộp tìm kiếm -->
 
 
@@ -225,17 +220,17 @@
 </script>
 
 <!-- jQuery -->
-<script src="js/jquery-3.4.1.js"></script>
+<script src="{{ asset('js/jquery-3.4.1.js') }}"></script>
 <!-- Popper.js -->
-<script src="js/popper.min.js"></script>
+<script src="{{ asset('js/popper.min.js') }} "></script>
 <!-- Bootstrap JS -->
-<script src="js/bootstrap.min.js"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
 <!-- Slick JS -->
-<script src="js/slick.min.js"></script>
+<script src="{{ asset('js/slick.min.js') }}"></script>
 <!-- Wow JS -->
 <script src="https://cdn.rawgit.com/matthieua/WOW/1.0.1/dist/wow.min.js"></script>
 <!-- JS -->
-<script src="js/script.js"></script>
+<script src="{{ asset('js/script.js') }}"></script>
 
 
 </body>

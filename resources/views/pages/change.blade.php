@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('content')
 <main>
+
     <div class="container">
       <div class="row">
 
@@ -8,6 +9,20 @@
          <h2 class="text-center my-5 page-heading">Change Password</h2>
         
       </div>
+      @if ($errors->any())
+    <div class="alert alert-danger" style="margin: auto">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    @if(Session::has('mess'))
+        <div class="alert alert-danger" style="width: 40%; margin: auto auto">
+            {{Session::get('mess')}}
+        </div>
+    @endif
       <div class="container">
         <section id="content">
           <form action="{{ route('change-password') }}" method="post" enctype="multipart/form-data">

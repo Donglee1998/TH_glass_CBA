@@ -22,7 +22,7 @@
                     @endforeach
                 </td>
                 <td><button class="btn btn-success"><a style="text-decoration: none" href="{{route('admin.role-update',['id'=>$acc->id])}}">Edit</a></button>
-                    <button class="btn btn-danger"><a style="text-decoration: none" href="{{route('admin.delete-admin',['id'=>$acc->id])}}" class="delete">Delete</a></button>
+                    <button class="btn btn-danger"><a style="text-decoration: none" href="{{route('admin.role-delete',['id'=>$acc->id])}}" class="delete">Delete</a></button>
                 </td>
             </tr>
         @endforeach

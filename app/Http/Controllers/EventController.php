@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\Event\EventRepository;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\EventImport;
+use App\Http\Requests\EventRequest;
 
 
 class EventController extends Controller
@@ -36,27 +37,29 @@ class EventController extends Controller
     }
 
     public function postAdd(Request $request){
-
-    	 $this->validate($request,
-            [
-                'name' => 'required',
-                'description' => 'required',
-                'number_of_participants' => 'required|integer:500',
-                'start_day' => 'required',
-                'image'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'public_time'=>'required',
-                'status'=>'required'
-            ],
-            [
-            ]);
     	$data = $request->all();
-    	$data['image'] = rand(0,9999).'_'.$request->file('image')->getClientOriginalName();
-        $file=$request->file('image');
-        $destinationPath = public_path('uploads/');
-        $file->move( $destinationPath,$data['image']);
-        
+        $data['the_remaining_amount'] = $data['number_of_participants'];
         $this->eventRepo->create($data);
         return redirect()->route('admin.event-list');
+    }
+
+    public function postConfirm(EventRequest $request){
+        $data = $request->all();
+        $data['image'] = $data['hidden'];
+        return view('admin.events.confirm', compact('data'));
+    }
+
+    public function cropper(Request $request){
+        $file=$request->file('image');
+        $destinationPath = public_path('uploads/');
+        $new_image_name = 'UIMG'.date('Ymd').uniqid().'.jpg';
+        $upload = $file->move($destinationPath, $new_image_name);
+        if($upload){
+          return response()->json(['status'=>1, 'msg'=>['msg' => 'Image has been cropped successfully.', 'name' => $new_image_name], 'name'=>$new_image_name]);
+        }else{
+            return response()->json(['status'=>0, 'msg'=>'Something went wrong, try again later']);
+        }
+
     }
 
     public function import() 
@@ -71,18 +74,6 @@ class EventController extends Controller
     }
 
     public function postEdit(Request $request, $id){
-    	$this->validate($request,
-            [
-                'name' => 'required',
-                'description' => 'required',
-                'number_of_participants' => 'required|integer:500',
-                'start_day' => 'required',
-                'image'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'public_time'=>'required',
-                'status'=>'required'
-            ],
-            [
-            ]);
     	$data = $request->all();
     	if (isset($data['image'])) {
  			$data['image'] = rand(0,9999).'_'.$request->file('image')->getClientOriginalName();

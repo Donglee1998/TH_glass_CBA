@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 
@@ -42,26 +43,11 @@ class LoginAdminController extends Controller
     	return view('admin.logins.login');
     }
 
-    public function postLogin(Request $request){
-
-    	$this->validate($request,
-            [
-                'email' => 'required|email',
-                'password' => 'required|min:6|max:20',
-            ],
-            [
-                'email.required' => 'Vui long nhap email',
-                'email.email' => 'Nhap khong dung dinh dang email',
-                'password.required' => 'Vui long nhap mat khau',
-                'password.min' =>"Mat khau it nhat 6 ky tu",
-                'password.max' => "Mat khau toi da 20 ky tu"
-            ]
-        );
+    public function postLogin(LoginRequest $request){
     	$arr = [
             'email' => $request->email,
             'password' => $request->password,
         ];
-        
         if (Auth::guard('admin')->attempt($arr)) {
         	return redirect()->route('admin_index');
         } else {

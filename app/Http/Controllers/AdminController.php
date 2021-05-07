@@ -5,9 +5,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Repositories\Admin\AdminRepository;
 use App\Repositories\Role\RoleRepository;
+use App\Http\Requests\AdminRequest;
+use App\Http\Requests\AdminEditRequest;
 use Hash;
 use App\Models\Admin;
 use App\Models\Role;
+use Auth;
 
 
 class AdminController extends Controller
@@ -24,34 +27,18 @@ class AdminController extends Controller
     public function getIndex()
     {
         $admin = $this->adminRepo->getAdmin();
-        return view('admin.admins.index', ['admin' => $admin]);
+        $roles = auth()->user()->roles;
+      
+        return view('admin.admins.index', ['admin' => $admin, 'roles' => $roles]);
     }
 
     public function getAddAdmin(){
         $role = $this->roleRepo->getAll();
-
         return view('admin.admins.add', compact('role'));
     }
 
     public function postAddAdmin(Request $request){
         $data = $request->all();
-        $this->validate($request,
-            [
-                'email' => 'required|email|unique:admins,email',
-                'password' => 'required|min:6|max:20',
-                'name' => 'required',
-                're-password' => 'required|same:password'
-            ],
-            [
-                'email.required' => 'Vui long nhap email',
-                'email.email' => 'Nhap khong dung dinh dang email',
-                'email.unique' => 'Email da co nguoi su dung',
-                'password.required' => 'Vui long nhap mat khau',
-                're-password.same' => 'Mat khau khong giong nhau',
-                'password.min' =>"Mat khau it nhat 6 ky tu",
-                'password.max' => "Mat khau toi da 20 ky tu"
-            ]
-        );
         try {
             DB::beginTransaction();
             $data['password']=Hash::make($data['password']);
@@ -61,9 +48,12 @@ class AdminController extends Controller
         return redirect()->route('admin_index');
         } catch (\Exception $exception) {
             DB::rollBack();
-
-
         }
+    }
+
+    public function postConfirm(AdminRequest $request){
+        $data = $request->all();
+        return view('admin.admins.confirm_admin', compact('data'));
     }
 
 
@@ -75,7 +65,7 @@ class AdminController extends Controller
         return view('admin.admins.edit_admin',compact('admin', 'roleOfAdmin', 'roles'));
     }
 
-    public function updateAdmin(Request $request, $id){
+    public function updateAdmin(AdminEditRequest $request, $id){
         $data = $request->all();
         try {
             DB::beginTransaction();
@@ -86,8 +76,7 @@ class AdminController extends Controller
             return redirect()->route('admin_index');
         } catch (\Exception $exception) {
             DB::rollBack();
-            Log::error('Message :' . $exception->getMessage() . '--- Line: ' . $exception->getLine());
-            dd(1);
+            dd("Lỗi");
 
         }
     }

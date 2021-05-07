@@ -13,34 +13,42 @@ class UserRepository extends BaseRepository
         return \App\Models\User::class;
     }
 
-    public function addUser($attributes = []){
-    	$file=$attributes['avatar'];
-    	$attributes['avatar'] = rand(0,9999).'_'.$attributes['avatar']->getClientOriginalName();
-        $destinationPath = public_path('uploads/');
-        $file->move( $destinationPath,$attributes['avatar']);
-        $attributes['password']=Hash::make($attributes['password']);
-        return $this->model->create($attributes);
+    // public function addUser($attributes = []){
+    // 	$file=$attributes['avatar'];
+    // 	$attributes['avatar'] = rand(0,9999).'_'.$attributes['avatar']->getClientOriginalName();
+    //     $destinationPath = public_path('uploads/');
+    //     $file->move( $destinationPath,$attributes['avatar']);
+    //     $attributes['password']=Hash::make($attributes['password']);
+    //     return $this->model->create($attributes);
+    // }
+
+    // public function editUser($attributes = [], $id){
+    // 	if(isset($attributes['avatar'])){
+    // 		$file=$attributes['avatar'];
+	   //  	$attributes['avatar'] = rand(0,9999).'_'.$attributes['avatar']->getClientOriginalName();
+	   //      $destinationPath = public_path('uploads/');
+	   //      $file->move( $destinationPath,$attributes['avatar']);
+	   //      return $this->model->find($id)->update($attributes);
+    // 	}
+    //     	return $this->model->find($id)->update($attributes);
+    // }
+
+    // public function changePass($attributes = [], $id){
+    //     $password = $this->model->find($id);
+    //     if (Hash::check($attributes['old-password'], $password['password'])) {
+    //        return $this->model->find($id)->update($attributes);
+    //     }else{
+    //         return null;
+    //     }
+    // }
+
+    public function getUser(){
+        $user = $this->model->with('events')->get();
+        return $user;
     }
 
-    public function editUser($attributes = [], $id){
-    	if(isset($attributes['avatar'])){
-    		$file=$attributes['avatar'];
-	    	$attributes['avatar'] = rand(0,9999).'_'.$attributes['avatar']->getClientOriginalName();
-	        $destinationPath = public_path('uploads/');
-	        $file->move( $destinationPath,$attributes['avatar']);
-	        return $this->model->find($id)->update($attributes);
-    	}
-        	return $this->model->find($id)->update($attributes);
-    }
-
-    public function changePass($attributes = [], $id){
-        $password = $this->model->find($id);
-        if ($attributes['old-password'] = $password['password']) {
-           return $this->model->find($id)->update($attributes);
-        }else{
-            return fall;
-        }
-        
-    
+    public function getUserId($id){
+        $user = $this->model->with('events')->find($id);
+        return $user;
     }
 }

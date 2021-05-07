@@ -1,4 +1,7 @@
 @extends('admin.layouts.master')
+@section('css')
+    <link rel="stylesheet" href="{{ asset('ijaboCropTool/ijaboCropTool.min.css')}}">
+@endsection
 @section('content')
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -21,11 +24,11 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Event!</h1>
                             </div>
-                            <form class="user" method="post" action="{{ route('admin.event-add') }}" enctype="multipart/form-data">
-                            	{{csrf_field()}}
+                            <form class="user" method="post" action="{{ route("admin.event-confirm") }}" enctype="multipart/form-data">
+                            @csrf
                                 <div class="form-group">
                                
-                                        <input type="text" class="form-control form-control-user" name="name"
+                                        <input type="text" class="form-control form-control-user" name="name" id="name" 
                                             placeholder="Name ...">
     
                                 </div>
@@ -34,7 +37,7 @@
                                 </div>
                                 <div class="form-group">
                                     <h6>Start day</h6>
-                                    <input type="date" name="start_day">
+                                    <input type="date" name="start_day" >
                                 </div>
                                 <div class="form-group">
                                         <input type="number" class="form-control form-control-user" name="number_of_participants"
@@ -43,8 +46,16 @@
                                 
                                 <div class="form-group">
                                     <h6>Image: </h6>
-                                    <input type="file" name="image">
+                                    <input type="file" name="image" id="image">
+                                    <input type="hidden" name="hidden" id="hidden">
                                 </div>
+
+
+
+
+
+
+
                                 <div class="form-group">
                                     <h6>Public time</h6>
                                     <input type="date" name="public_time">
@@ -67,12 +78,49 @@
                                   />
                                   <label class="form-check-label" for="flexRadioDefault1">Unpublic</label>
                                 </div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+                                <br>
 								<!-- Default checked radio -->
                                 <button type="submit"  class="btn btn-primary btn-user btn-block">
-                                	Add Account
+                                	Add Events
                                 </button>
 
                             </form>
 
     </div>
+@endsection
+@section('javascript')
+<script src="{{ asset('ijaboCropTool/ijaboCropTool.min.js')}}"></script>
+<script>
+               
+    $('#image').ijaboCropTool({
+          preview : '.image-previewer',
+          setRatio:1,
+          allowedExtensions: ['jpg', 'jpeg','png'],
+          buttonsText:['CROP','QUIT'],
+          buttonsColor:['#30bf7d','#ee5155', -15],
+          processUrl:'{{ route("admin.cropper") }}',
+          withCSRF:['_token','{{ csrf_token() }}'],
+          onSuccess:function(message, element, status){
+             $('#hidden').val(message.name);
+             alert(message.msg);
+          },
+          onError:function(message, element, status){
+            alert(message);
+          }
+       });
+</script>
 @endsection
